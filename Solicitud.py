@@ -78,12 +78,13 @@ def pdf(data):
     sheet["C20"] = Celular
     sheet["C21"] = Tipo_de_usuario 
 
-    filename = Fecha + " " + Tipo_de_usuario + " solicitud"
+    filename = Fecha + " " + Tipo_de_usuario + " solicitud"+".pdf"
     file_stream = BytesIO()
     workbook.save(filename= filename)
     file_stream.seek(0)
     
-    return send_file(filename, as_attachment=True, mimetype="application/pdf", download_name="sign.pdf")
+    return send_file(filename, as_attachment=True, mimetype="application/pdf")
+    #, download_name="solicitud.pdf"
 
 
 
