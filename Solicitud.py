@@ -45,7 +45,7 @@ def pdf(data):
     Celular = data["Celular"]
     Tipo_de_usuario = data["AccesoApp"]
     Nota = data["Nota"] 
-    
+    print(Nota)
     workbook = load_workbook(filename="C:\\Users\\hp\\OneDrive\\Escritorio\\template_sol_usuarios.xlsx")
     workbook.sheetnames
     sheet = workbook.active
