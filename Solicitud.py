@@ -10,7 +10,6 @@ from pathlib import Path
 #from reportlab.pdfgen import canvas
 #from reportlab.lib.units import inch
 from openpyxl import load_workbook
-import tkinter as tk
 
 app = Flask(__name__)
 CORS(app)
@@ -47,7 +46,7 @@ def pdf(data):
     Tipo_de_usuario = data["AccesoApp"]
     Nota = data["Nota"] 
     
-    workbook = load_workbook(filename="template_sol_usuarios.xlsx")
+    workbook = load_workbook(filename="C:\\Users\\hp\\OneDrive\\Escritorio\\template_sol_usuarios.xlsx")
     workbook.sheetnames
     sheet = workbook.active
     print(workbook) 
