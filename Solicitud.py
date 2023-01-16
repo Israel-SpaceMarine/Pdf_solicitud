@@ -6,10 +6,8 @@ from flask_cors import CORS
 import json
 import os
 import glob
-from pathlib import Path
+from auth.jwt import check_token
 
-import pythoncom
-from win32com import client
 
 from openpyxl import load_workbook
 
@@ -19,14 +17,14 @@ CORS(app)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 
-@app.route('/pdf',  methods=['POST'])
-
+@app.route('/solicitud',  methods=['POST'])
+@check_token
 
 def get_data():
     data = request.data
     data = json.loads(data)
-    #for f in glob.iglob('*.xlsx', recursive=True):
-     #   os.remove(f)
+    for f in glob.iglob('.xlsx', recursive=True):
+        os.remove(f)
     return pdf(data)
 
 
@@ -48,7 +46,7 @@ def pdf(data):
     Tipo_de_usuario = data["AccesoApp"]
     Nota = data["Nota"] 
     print(Nota)
-    workbook = load_workbook(filename="template_sol_usuarios.xlsx")
+    workbook = load_workbook(filename="./templates/template_sol_usuarios.xlsx")
     workbook.sheetnames
 
     sheet = workbook.active
@@ -69,29 +67,23 @@ def pdf(data):
 
     filename = Tipo_de_usuario + ".xlsx"
     file_stream = BytesIO()
-    workbook.save(filename)
-    pdfop =  Path(filename)
-    pdfop2 = open(filename, "w")
-    print(type(pdfop2))
+    workbook.save(Tipo_de_usuario + ".xlsx")
+    
+    
     file_stream.seek(0)
 
     
-    # excel = client.Dispatch("Excel.Application" ,pythoncom.CoInitialize())
-    # sheets = excel.workbook.Open(pdfop)
-    # work_sheets = sheets.workbook[0]
-    # pdfnew = work_sheets.ExportAsFixedFormat(0, pdfop)
-    # import pandas as pd
-    # import pdfkit
-    # df = pd.read_excel(filename, index_col=0)
-    # df.head()
-    # f = open('exp.html','b')
-    # a = df.to_html()
-    # f.write(a)
-    # f.close()
-    # pdfkit.from_file('exp.html', 'example.pdf')
-
-    return send_file(pdfop2, as_attachment=True, mimetype="application/pdf", download_name="solicitud.pdf")
-    #,
+    
+    # excel = client.Dispatch("Excel.Application",pythoncom.CoInitialize())
+    # #app.Interactive = False
+    # #app.Visible = False
+    # #pdfop2 = app.open(filename, "rb")
+    # sheets = excel.Workbooks.Open('C:\\Users\\hp\\OneDrive\\Escritorio\\PDF_solicitud\\'+filename)
+    # work_sheets = sheets.Worksheets[0]
+    # pedf_T = work_sheets.ExportAsFixedFormat(0, 'C:\\Users\\hp\\OneDrive\\Escritorio\\PDF_solicitud\\'+filename)
+    # sheets.close()
+    return send_file(filename , as_attachment=True, )
+   
 
 
 
