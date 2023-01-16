@@ -7,8 +7,10 @@ import json
 import os
 import glob
 from pathlib import Path
-#from reportlab.pdfgen import canvas
-#from reportlab.lib.units import inch
+
+import pythoncom
+from win32com import client
+
 from openpyxl import load_workbook
 
 app = Flask(__name__)
@@ -30,7 +32,7 @@ def get_data():
 
 def pdf(data):
 
-    #fileName = 'sample.pdf'
+  
     Fecha =	data["Fecha"]
     Tipo_de_movimiento = data["TipoDeMovimiento"]
     Nombre=	data["Nombre"]
@@ -46,23 +48,10 @@ def pdf(data):
     Tipo_de_usuario = data["AccesoApp"]
     Nota = data["Nota"] 
     print(Nota)
-    workbook = load_workbook(filename="C:\\Users\\hp\\OneDrive\\Escritorio\\template_sol_usuarios.xlsx")
+    workbook = load_workbook(filename="template_sol_usuarios.xlsx")
     workbook.sheetnames
+
     sheet = workbook.active
-    print(workbook) 
-    # img = open("NL-login-pdf.png")
-    # #img2 = Path("NL-login-pdf.png")
-    # img3 = "NL-login-pdf.png"
-    # print(img3)
-    # #img = img.read()
-    # import fitz
-    # pdf_firma = canvas.Canvas(fileName)
-    # pdf_firma.setTitle("Prueba")
-    # pdf_firma.drawCentredString(200, 785, "Prueba")
-    # #pdf_firma.drawInlineImage(img3, 450, 695, width=1.4*inch, height=1.4*inch)
-    # #pdf_firma.drawImage(img3, 450, 695, width=1.4*2, height=1.4*2, preserveAspectRatio=True, mask='auto')
-    # pdf_firma.save()
-    # pdfop =  Path("sample.pdf")
     sheet["C9"] = Fecha
     sheet["C10"] = Tipo_de_movimiento
     sheet["C11"] = Nombre
@@ -76,14 +65,33 @@ def pdf(data):
     sheet["C19"] = Extensión
     sheet["C20"] = Celular
     sheet["C21"] = Tipo_de_usuario 
-
-    filename = Fecha + " " + Tipo_de_usuario + " solicitud"+".pdf"
-    file_stream = BytesIO()
-    workbook.save(filename= filename)
-    file_stream.seek(0)
     
-    return send_file(filename, as_attachment=True, mimetype="application/pdf")
-    #, download_name="solicitud.pdf"
+
+    filename = Tipo_de_usuario + ".xlsx"
+    file_stream = BytesIO()
+    workbook.save(filename)
+    pdfop =  Path(filename)
+    pdfop2 = open(filename, "w")
+    print(type(pdfop2))
+    file_stream.seek(0)
+
+    
+    # excel = client.Dispatch("Excel.Application" ,pythoncom.CoInitialize())
+    # sheets = excel.workbook.Open(pdfop)
+    # work_sheets = sheets.workbook[0]
+    # pdfnew = work_sheets.ExportAsFixedFormat(0, pdfop)
+    # import pandas as pd
+    # import pdfkit
+    # df = pd.read_excel(filename, index_col=0)
+    # df.head()
+    # f = open('exp.html','b')
+    # a = df.to_html()
+    # f.write(a)
+    # f.close()
+    # pdfkit.from_file('exp.html', 'example.pdf')
+
+    return send_file(pdfop2, as_attachment=True, mimetype="application/pdf", download_name="solicitud.pdf")
+    #,
 
 
 
