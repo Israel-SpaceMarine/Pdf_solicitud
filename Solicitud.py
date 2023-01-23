@@ -19,7 +19,7 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 
 @app.route('/solicitud',  methods=['POST'])
-#@check_token
+@check_token
 
 # funcion donde se recibe el json, se procesa y se remueven los xlsx para no tener basura en el cache
 def get_data():
